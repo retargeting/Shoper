@@ -1,0 +1,221 @@
+<!-- RA::helpers & embedding -->
+<script>
+function _ra_queryApi(method, params) {
+	if (typeof method === 'undefined') return false;
+	params = JSON.stringify(params || '');
+	var _ra_js = document.createElement("script");
+	_ra_js.type ="text/javascript";
+	_ra_js.async = true;
+	_ra_js.src = "https://retargeting.biz/Shoper/api.php?method="+method+"&shop="+encodeURI(window.location.host)+"&params="+params;
+	var s = document.getElementsByTagName("script")[0];
+	document.getElementsByTagName("head")[0].appendChild(_ra_js);
+}
+// RA::embedd
+_ra_queryApi('embedd');
+</script>
+
+
+
+
+<!-- RA::generalMethods -->
+<script>
+// RA::setEmail
+$(document).ready(function() {
+	if (shoper.getVisitorId() !== null) _ra_queryApi('setEmail', {id: shoper.getVisitorId()});	
+});
+
+// RA::sendCategory
+var _ra_c = window.location.pathname.match(/\/c\/[0-9a-zA-Z-]+\/([0-9a-zA-Z]+)/);
+if (_ra_c !== null) _ra_queryApi('sendCategory', {id: _ra_c[1]});
+
+// RA::sendBrand
+var _ra_b = window.location.pathname.match(/\/producer\/[0-9a-zA-Z-]+\/([0-9a-zA-Z]+)/);
+if (_ra_b !== null) _ra_queryApi('sendBrand', {id: _ra_b[1]});
+
+// RA::visitHelpPages
+_ra_queryApi('visitHelpPages', {id: window.location.pathname});
+
+// RA::checkoutIds
+var _ra_cids = window.location.pathname.match(/[a-zA-Z]{2}\/basket/);
+if (_ra_cids !== null) {
+	var _ra = _ra || {};
+
+	if (_ra.ready !== undefined) {
+		_ra.checkoutIds(shoper.getBasketProducts());
+	}
+}
+</script>
+
+
+
+<!-- RA::productMethods -->
+<script>
+var _ra_ProductId = null;
+_ra_ProductId = '{product_id}';
+
+// RA::sendProduct
+var _ra_p = window.location.pathname.match(/\/p\/[0-9a-zA-Z-]+\/([0-9a-zA-Z]+)/);
+if (_ra_p !== null) {
+	var _ra_pid = _ra_ProductId || _ra_p[1];
+	_ra_queryApi('sendProduct', {id: _ra_p[1]});
+}
+
+// RA::addToCart
+$('form[action*="basket/add"] [type="submit"]').click(function() {
+	var _ra_pid = null;
+	var _ra_parent = $(this).closest('form[action*="basket/add"]')[0];
+	
+	var _ra_regex = $(_ra_parent).attr('action').match(/basket\/add\/([0-9]+)/);
+	_ra_pid = (_ra_regex !== null ? _ra_regex[1] : null);
+
+	if (_ra_pid === null) {
+		_ra_pid = $(_ra_parent).find('input[name="stock_id"]'); 
+		if (_ra_pid.length > 0) {
+			_ra_pid = _ra_pid[0].value;
+		} else {
+			_ra_pid = _ra_ProductId;
+		}
+	}
+
+	if (_ra_pid !== null) {
+
+		var _ra_arr_code = [], _ra_arr_details = [];
+
+		var _ra_options = $(_ra_parent).find('[class*="option_"]');
+		for (var i = 0; i < _ra_options.length; i ++) {
+			var _ra_option = $(_ra_options).find('select');
+			var _ra_oValue = _ra_option[i].options[_ra_option[i].selectedIndex].innerText;
+			var _ra_oCode = _ra_option[i].value;
+			var _ra_oLabel = ($('label[for="'+_ra_option[i].getAttribute('id')+'"]').length > 0 ? $('label[for="'+_ra_option[i].getAttribute('id')+'"]')[0].innerText : _ra_option[i].getAttribute('id'));
+
+			// if (_ra_oCode !== "" && _ra_oCode !== null) {
+				// _ra_arr_code.push(_ra_oCode);
+			if (_ra_oValue !== "" && _ra_oValue !== null) {
+				_ra_oValue = _ra_oValue.replace(/-/g, '');
+				_ra_arr_code.push(_ra_oValue);
+				_ra_arr_details[_ra_oCode] = {"category_name": _ra_oLabel, "category": _ra_oLabel, "value": _ra_oValue};
+			}
+		}
+
+		var _ra_variation = false;
+		if (_ra_arr_code.length > 0) 
+			_ra_variation = {
+				"code": _ra_arr_code.join("-"),
+				"details": _ra_arr_details
+			};
+		_ra.addToCart(_ra_pid, _ra_variation);
+	}
+});
+
+// RA::setVariation
+
+
+// RA::addToWishlist
+$('a[href*="fav/add"]').click(function() {
+	var _ra_pid = null;
+	
+	var _ra_regex = $(this).attr('href').match(/fav\/add\/([0-9]+)/);
+	_ra_pid = (_ra_regex !== null ? _ra_regex[1] : null);
+
+	if (_ra_pid === null) _ra_pid = _ra_ProductId;
+
+	if (_ra_pid !== null) {
+		_ra.addToWishlist(_ra_pid);
+	}
+});
+
+// RA::clickImage
+document.querySelector(".mainimg").addEventListener("mouseover", function(ev) {
+	var _ra_pid = _ra_ProductId || null;
+
+	if (_ra_pid !== null) {
+		_ra.clickImage(_ra_pid);
+	}
+});
+
+// RA::commentOnProduct
+$('form[action*="comment/add"] [type="submit"]').click(function() {
+	var _ra_pid = _ra_ProductId || null;
+
+	if (_ra_pid !== null) {
+		_ra.commentOnProduct(_ra_pid);
+	}
+});
+
+// RA::mouseOverPrice
+var _ra_mop = document.querySelector('.basket .price em');
+_ra_mop.addEventListener("mouseover", function(ev) {
+	var _ra_pid = _ra_ProductId || null;
+
+	if (_ra_pid !== null) {
+		_ra_queryApi('mouseOverPrice', {id: _ra_pid});
+	}
+});
+_ra_mop = document.querySelector('.basket .price del ');
+_ra_mop.addEventListener("mouseover", function(ev) {
+	var _ra_pid = _ra_ProductId || null;
+
+	if (_ra_pid !== null) {
+		_ra_queryApi('mouseOverPrice', {id: _ra_pid});
+	}
+});
+
+// RA::mouseOverAddToCart
+document.querySelector('form[action*="basket/add"] [type="submit"]').addEventListener("mouseover", function() {
+	var _ra_pid = _ra_ProductId || null;
+
+	if (_ra_pid !== null) {
+		_ra.mouseOverAddToCart(_ra_pid);
+	}
+});
+
+// RA::likeFacebook
+if (typeof FB != "undefined") {
+	FB.Event.subscribe("edge.create", function () {
+		var _ra_pid = _ra_ProductId || null;
+
+		if (_ra_pid !== null) {
+			_ra.likeFacebook(_ra_pid);
+		}
+	});
+};
+</script>
+
+
+
+<!-- RA::orderMethods -->
+<script>
+// RA::saveOrder
+_ra_queryApi('saveOrder', {id: "{if order_id}{order_id}{else}Error: non-existant variable{/if}"});
+function _ra_saveOrder(discountValue) {
+	var _ra = _ra || {};
+	_ra.saveOrderInfo = {
+		"order_no": "{if order_id}{order_id}{else}Error: non-existant variable{/if}",
+		"lastname": "{if bill_lastname}{bill_lastname}{else}Error: non-existant variable{/if}",
+		"firstname": "{if bill_firstname}{bill_firstname}{else}Error: non-existant variable{/if}",
+		"email": "{if email}{email}{else}Error: non-existant variable{/if}",
+		"phone": "{if phone_1}{phone_1}{else}Error: non-existant variable{/if}",
+		"state": "{if bill_country}{bill_country}{else}Error: non-existant variable{/if}",
+		"city": "{if bill_city}{bill_city}{else}Error: non-existant variable{/if}",
+		"address": "{if deliv_street_1}{deliv_street_1}{else}Error: non-existant variable{/if}{if deliv_street_2} {deliv_street_2}{/if}",
+		"discount_code": "{if discount_code}{discount_code}{else}Error: non-existant variable{/if}",
+		"discount": discountValue,
+		"shipping": "{if float_shipping_cost}{float_shipping_cost}{else}Error: non-existant variable{/if}",
+		"total": "{if float_sum}{float_sum}{else}Error: non-existant variable{/if}"
+	};
+	_ra.saveOrderProducts = [
+		{products}
+		    {
+				"id": "{products.product_id}",
+				"quantity": {products.quantity},
+				"price": "{products.float_price}",
+				"variation_code": [{products.options}"{products.options.value}", {/products.options}].join('-')
+			},
+		{/products}
+	];
+
+	if( _ra.ready !== undefined ){
+		_ra.saveOrder(_ra.saveOrderInfo, _ra.saveOrderProducts);
+	}
+}
+</script>
