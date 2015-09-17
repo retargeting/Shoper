@@ -1,0 +1,121 @@
+--- 25-06-2015 ---
+
+Array
+(
+    [action] => install
+    [application_code] => 21e6f0c7c42542af3bbf267cfde9763a
+    [application_version] => 4
+    [auth_code] => d43fe323a2aa84fc0900e6f42e67d22d
+    [shop] => 2f7fea8b3e9231a80d5bbea019643a9bf656c63d
+    [shop_url] => https://devshop-63421.shoparena.pl
+    [timestamp] => 2015-06-25 12:15:19
+    [hash] => 1ac83fe821d794db8708e3ab47d2a27067c7066ee58aa76030cdede3201bcd4c2d2b9195f774dea7ed96eb37795f6c741a4bc325332bdf5e4a8b3f91e778938a
+)
+
+
+
+--- 25-06-2015 ---
+
+Array
+(
+    [action] => uninstall
+    [application_code] => 21e6f0c7c42542af3bbf267cfde9763a
+    [shop] => 2f7fea8b3e9231a80d5bbea019643a9bf656c63d
+    [shop_url] => https://devshop-63421.shoparena.pl
+    [timestamp] => 2015-06-25 12:16:46
+    [hash] => 85b7cea4526d5a06162c9fdd09564590af098fe841e99855affe0e1b5332cb5735082d99366a644b5ee2a618b8ea0a63c9fce356f9e474240b814b28918e1467
+)
+
+
+
+--- 25-06-2015 ---
+
+Array
+(
+    [action] => install
+    [application_code] => 21e6f0c7c42542af3bbf267cfde9763a
+    [application_version] => 4
+    [auth_code] => 2eee4332fdee65b9b69037f214b4cdd5
+    [shop] => 2f7fea8b3e9231a80d5bbea019643a9bf656c63d
+    [shop_url] => https://devshop-63421.shoparena.pl
+    [timestamp] => 2015-06-25 12:17:16
+    [hash] => 41996f5e860bdf2c489f3e25c99146fd194e2bde012de6ed1d48bce389fc3f8eeecff90deef98a18b5e653428cc37567ed5215d4c78c00ebafd0c1fe7189b768
+)
+
+
+
+--- 25-06-2015 ---
+
+Array
+(
+    [action] => upgrade
+    [application_code] => 21e6f0c7c42542af3bbf267cfde9763a
+    [application_version] => 5
+    [shop] => 2f7fea8b3e9231a80d5bbea019643a9bf656c63d
+    [shop_url] => https://devshop-63421.shoparena.pl
+    [timestamp] => 2015-06-25 13:08:50
+    [hash] => d0e395d91516a5c623e88d14da535644ac0f3c68fb15ad2f7d97fb9c483c27efbc4a6e47e814ff835d266965b61eab51cb3aa648c942b1e90a9df5230cd41729
+)
+
+
+
+--- 25-06-2015 ---
+
+Array
+(
+    [action] => upgrade
+    [application_code] => 21e6f0c7c42542af3bbf267cfde9763a
+    [application_version] => 6
+    [shop] => 2f7fea8b3e9231a80d5bbea019643a9bf656c63d
+    [shop_url] => https://devshop-63421.shoparena.pl
+    [timestamp] => 2015-06-25 13:13:54
+    [hash] => 22af4846a47551701c89104f8172899adaf931df3a9103f05a9ac4eac64585c6ea069dbe9c6f10d2ba8e576c62fc043500fefb98d4e506e3a00f3ad68613cb80
+)
+
+
+
+--- 25-06-2015 ---
+
+Array
+(
+    [action] => upgrade
+    [application_code] => 21e6f0c7c42542af3bbf267cfde9763a
+    [application_version] => 7
+    [shop] => 2f7fea8b3e9231a80d5bbea019643a9bf656c63d
+    [shop_url] => https://devshop-63421.shoparena.pl
+    [timestamp] => 2015-06-25 13:34:16
+    [hash] => b78bf75039b72b0cc82015ae010ff62886a9cf9f495e18e0e08d2f56d2914a33b0cef79976c873ca67570443afc0757faf465cac0c5e403fd0126ca1008c451b
+)
+
+
+
+--- 26-06-2015 ---
+
+Array
+(
+    [action] => uninstall
+    [application_code] => 21e6f0c7c42542af3bbf267cfde9763a
+    [shop] => 2f7fea8b3e9231a80d5bbea019643a9bf656c63d
+    [shop_url] => https://devshop-63421.shoparena.pl
+    [timestamp] => 2015-06-26 13:13:12
+    [hash] => 96bb01d61c797c66a28e9d3bdb16a6186b0f699d0da643ab88d183f12c2440e42892206cb1c7436b694a400daa22a02d69b832968ded03ec22257ab6717e6252
+)
+
+
+
+--- 26-06-2015 ---
+
+Array
+(
+    [action] => install
+    [application_code] => 21e6f0c7c42542af3bbf267cfde9763a
+    [application_version] => 7
+    [auth_code] => a88f3befc855dc8b7513b74ab416b22b
+    [shop] => 2f7fea8b3e9231a80d5bbea019643a9bf656c63d
+    [shop_url] => https://devshop-63421.shoparena.pl
+    [timestamp] => 2015-06-26 13:13:27
+    [hash] => 3467f781c0d7f8b5a28d1f1646fc6f34c1eb5c0155af007296905c6c21a6fc4a521f7723a8b26c42e74071e32fa664795d50afe6299692fa9220ab9144ed118f
+)
+
+
+
