@@ -92,6 +92,12 @@ class App {
 		$this->domainApiKey = $shopConfig['domain_api_key'];
 		$this->discountsApiKey = $shopConfig['discounts_api_key'];
 		$this->querySelectors['addToCart'] = $shopConfig['qs_add_to_cart'];
+		$this->querySelectors['variation'] = $shopConfig['qs_variation'];
+		$this->querySelectors['addToWishlist'] = $shopConfig['qs_add_to_wishlist'];
+		$this->querySelectors['productImages'] = $shopConfig['qs_product_images'];
+		$this->querySelectors['review'] = $shopConfig['qs_review'];
+		$this->querySelectors['price'] = $shopConfig['qs_price'];
+		$this->querySelectors['oldPrice'] = $shopConfig['qs_old_price'];
 		$this->helpPages = $shopConfig['help_pages'];
 
 		// get shop Key & URL
