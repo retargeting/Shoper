@@ -1,5 +1,17 @@
 # Retargeting App for Shoper
 
+## Important v3 release notice
+**Before proper integration** make sure the DB contains the following (v3) fields:
+* qs_variation
+* qs_add_to_wishlist
+* qs_product_images
+* qs_review
+* qs_price
+* qs_old_price
+
+*Also, check the App's Settings in the Publishing Administration Area.*
+(https://panel.shoper.pl/default/appstore/viewApp/code/21e6f0c7c42542af3bbf267cfde9763a)
+
 ### Contents
 * Requirements & Compatibility.
 * Installing Retargeting Extension.

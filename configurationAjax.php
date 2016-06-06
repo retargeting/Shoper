@@ -10,7 +10,7 @@ if (empty($_POST['shop']) || empty($_POST['shopKey'])) {
 	die('<p>Unauthorized request!</p>');
 }
 if ((!isset($_POST['domainApiKey']) || !isset($_POST['discountsApiKey'])) && (empty($_POST['disableInit']))) {
-	die('<p>Invalid request!</p>')
+	die('<p>Invalid request!</p>');
 }
 
 require 'config.php';

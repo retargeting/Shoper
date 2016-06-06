@@ -60,11 +60,12 @@ function saveConfiguration() {
 			discountsApiKey: $('input[name="ra_discounts_api_key"]').val(), 
 			help_pages: $('input[name="ra_help_pages"]').val(), 
 			qs_add_to_cart: $('input[name="ra_add_to_cart"]').val(), 
-			// qs_variation: $('input[name="ra_variation"]').val(), 
-			// qs_add_to_wishlist: $('input[name="ra_add_to_wishlist"]').val(), 
-			// qs_image: $('input[name="ra_image"]').val(), 
-			// qs_review: $('input[name="ra_review"]').val(), 
-			// qs_price: $('input[name="ra_price"]').val()
+			qs_variation: $('input[name="ra_variation"]').val(), 
+			qs_add_to_wishlist: $('input[name="ra_add_to_wishlist"]').val(), 
+			qs_product_images: $('input[name="ra_product_images"]').val(), 
+			qs_review: $('input[name="ra_review"]').val(), 
+			qs_price: $('input[name="ra_price"]').val(),
+			qs_old_price: $('input[name="ra_old_price"]').val()
 		}, function(data) {
 			var data = JSON.parse(data);
 
@@ -111,11 +112,12 @@ function changeStatus() {
 			discountsApiKey: $('input[name="ra_discounts_api_key"]').val(), 
 			help_pages: $('input[name="ra_help_pages"]').val(), 
 			qs_add_to_cart: $('input[name="ra_add_to_cart"]').val(), 
-			// qs_variation: $('input[name="ra_variation"]').val(), 
-			// qs_add_to_wishlist: $('input[name="ra_add_to_wishlist"]').val(), 
-			// qs_image: $('input[name="ra_image"]').val(), 
-			// qs_review: $('input[name="ra_review"]').val(), 
-			// qs_price: $('input[name="ra_price"]').val()
+			qs_variation: $('input[name="ra_variation"]').val(), 
+			qs_add_to_wishlist: $('input[name="ra_add_to_wishlist"]').val(), 
+			qs_product_images: $('input[name="ra_product_images"]').val(), 
+			qs_review: $('input[name="ra_review"]').val(), 
+			qs_price: $('input[name="ra_price"]').val(),
+			qs_old_price: $('input[name="ra_old_price"]').val()
 		}, function(data) {
 			var data = JSON.parse(data);
 
