@@ -48,12 +48,15 @@ The extension’s settings are available via Applications - My Applications - Re
 
 * To enable the Retargeting Application just press Enable from under App Status. After that the App Status should be set to Running
 
+* Product Feed
+ * The Product Feed is found at this URL: https://retargeting.biz/Shoper/feed.php?method=products&shop=::your-shop-url::, where ::your-shop-url:: represents the URL address of your Shop (For example: devshop-63421.shoparena.pl).
+
 * Setup Help Pages
  * Go to your Shoper Store Admin Panel - Applications - My Applications - Retargeting Tracker - Configuration
  * Now add the URL handles for the pages on which you want the "visitHelpPage" event to fire. Use a comma as a separator for listing multiple handles. For example: http://yourshop.com/about-us is represented by the "about-us" handle
  * Click Save
 
-* Javascript Query Selectors
+* Javascript Query Selectors [Experimental]
  * The Retargeting App should work out of the box for most themes. But, as themes implementation can vary, in case there would be any problems with events not working as expected you can modify the following settings to make sure the events are linked to the right theme elements.
 
 ### Troubleshooting & Support
