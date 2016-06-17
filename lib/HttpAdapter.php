@@ -151,6 +151,21 @@ class HttpAdapter {
 		return $response;
 	}
 
+	public function getProducts($shopUrl, $page) {
+
+		$url = $shopUrl.'/webapi/rest/products?page='.$page;
+
+		$response = $this->sendBearerRequest($url);
+
+		$check = $this->checkIfTokenExpired($shopUrl, $response);
+		if ($check == 'tokens_expired')
+			return false;
+		if ($check)
+			$response = $this->sendBearerRequest($url);
+		
+		return $response;
+	}
+
 	public function getOrder($shopUrl, $id) {
 
 		$url = $shopUrl.'/webapi/rest/orders/'.$id;

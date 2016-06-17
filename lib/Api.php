@@ -270,7 +270,7 @@ class App {
 					}],
 					"inventory": {
 						"variations": false,
-						"stock": true
+						"stock": '.($product->stock->stock > 0 ? 1 : 0).'
 					}
 				};
 				
