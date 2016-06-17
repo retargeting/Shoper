@@ -115,7 +115,20 @@ $('form[action*="basket/add"] [type="submit"]').click(function() {
 });
 
 // RA::removeFromCart
-// *** to be implemented in App's next release
+var _ra_cids = window.location.pathname.match(/[a-zA-Z]{2}\/basket/);
+if (_ra_cids !== null) {
+	$('a[href*="basket/remove"]').click(function() {
+		var _ra_pid = null;
+		
+		var _ra_regex = $(this).attr('href').match(/basket\/remove\/([0-9]+)/);
+		_ra_pid = (_ra_regex !== null ? _ra_regex[1] : null);
+
+		if (_ra_pid !== null) {
+			_ra.removeFromCart(_ra_pid, 1, false);
+
+		}
+	});
+}
 
 // RA::visitHelpPages
 _ra_queryApi('visitHelpPages', {id: window.location.pathname});
@@ -343,19 +356,19 @@ $(document).ready(function() {
 // RA::saveOrder
 _ra_queryApi('saveOrder', {id: "{if order_id}{order_id}{else}Error: non-existant variable{/if}"});
 function _ra_saveOrder(discountValue) {
-	var _ra = _ra || {};
+	// var _ra = _ra || {};
 	_ra.saveOrderInfo = {
 		"order_no": "{if order_id}{order_id}{else}Error: non-existant variable{/if}",
 		"lastname": "{if bill_lastname}{bill_lastname}{else}Error: non-existant variable{/if}",
 		"firstname": "{if bill_firstname}{bill_firstname}{else}Error: non-existant variable{/if}",
 		"email": "{if email}{email}{else}Error: non-existant variable{/if}",
-		"phone": "{if phone_1}{phone_1}{else}Error: non-existant variable{/if}",
-		"state": "{if bill_country}{bill_country}{else}Error: non-existant variable{/if}",
-		"city": "{if bill_city}{bill_city}{else}Error: non-existant variable{/if}",
-		"address": "{if deliv_street_1}{deliv_street_1}{else}Error: non-existant variable{/if}{if deliv_street_2} {deliv_street_2}{/if}",
-		"discount_code": "{if discount_code}{discount_code}{else}Error: non-existant variable{/if}",
+		"phone": "{if phone_1}{phone_1}{/if}",
+		"state": "{if bill_country}{bill_country}{/if}",
+		"city": "{if bill_city}{bill_city}{/if}",
+		"address": "{if deliv_street_1}{deliv_street_1}{/if}{if deliv_street_2} {deliv_street_2}{/if}",
+		"discount_code": "{if discount_code}{discount_code}{else}{/if}",
 		"discount": discountValue,
-		"shipping": "{if float_shipping_cost}{float_shipping_cost}{else}Error: non-existant variable{/if}",
+		"shipping": "{if float_shipping_cost}{float_shipping_cost}{else}0{/if}",
 		"rebates": 0,
         "fees": 0,
 		"total": "{if float_sum}{float_sum}{else}Error: non-existant variable{/if}"

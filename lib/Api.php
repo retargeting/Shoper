@@ -136,6 +136,7 @@ class App {
 			$shopData = $this->db->getShopData($this->shopId);
 
 			$user = $this->http->getUser($shopData['shop_url'], $entityId);
+			if (!$user) return '/* Info: could not fetch Data because of invalid tokens. */';
 
 			$name = array();
 			if (!empty($user->firstname)) $name[] = $user->firstname;
@@ -165,6 +166,7 @@ class App {
 			$shopData = $this->db->getShopData($this->shopId);
 
 			$category = $this->http->getCategory($shopData['shop_url'], $entityId);
+			if (!$category) return '/* Info: could not fetch Data because of invalid tokens. */';
 
 			$categoryTree = (object) array(
 				'id' => -1,
@@ -206,6 +208,7 @@ class App {
 			$shopData = $this->db->getShopData($this->shopId);
 
 			$brand = $this->http->getBrand($shopData['shop_url'], $entityId);
+			if (!$brand) return '/* Info: could not fetch Data because of invalid tokens. */';
 
 			return 'var _ra = _ra || {};
 				_ra.sendBrandInfo = {
@@ -235,6 +238,7 @@ class App {
 			$shopData = $this->db->getShopData($this->shopId);
 
 			$product = $this->http->getProduct($shopData['shop_url'], $entityId);
+			if (!$product) return '/* Info: could not fetch Data because of invalid tokens. */';
 
 			$productImage = '';
 			if ($product->main_image !== null)
@@ -314,6 +318,9 @@ class App {
 
 			$entityId = $this->params['params']->id;
 
+			if ($shopData['help_pages'] == '')
+				return '/*'.json_encode(array("Info" => "No help pages specified in Retargeting App!")).'*/';
+
 			$pageHandles = explode(',', str_replace(' ', '', $shopData['help_pages']));
 
 			foreach ($pageHandles as $pageHandle) {
@@ -348,10 +355,15 @@ class App {
 			$shopData = $this->db->getShopData($this->shopId);
 
 			$order = $this->http->getOrder($shopData['shop_url'], $entityId);
+			if (!$order) return '/* Info: could not fetch Data because of invalid tokens. */';
 
 			$discount = number_format($order->sum * $order->discount_code / 100);
 
-			return $order->sum.' * '.$order->discount_code.' = '.$discount.'
+			// return $order->sum.' * '.$order->discount_code.' = '.$discount.'
+			// 	var _ra_oDiscountCode = "'.$discount.'";
+			// 	_ra_saveOrder("'.$discount.'");
+			// ';
+			return '
 				var _ra_oDiscountCode = "'.$discount.'";
 				_ra_saveOrder("'.$discount.'");
 			';
