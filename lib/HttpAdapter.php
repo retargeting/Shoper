@@ -1,6 +1,8 @@
 <?php
 //namespace Retargeting\Lib;
 
+require_once 'DataBaseConnection.php';
+
 class HttpAdapter {
 	
 	protected $http = null;
@@ -11,6 +13,8 @@ class HttpAdapter {
 
 	protected $tokens = array();
 
+	protected $db = false;
+
 	public function __construct($config, $tokens = array()) {
 
 		$this->config = $config;
@@ -18,6 +22,36 @@ class HttpAdapter {
 		$this->tokens = $tokens;
 		
 		return true;
+	}
+
+	public function checkIfTokenExpired($shopUrl, $response) {
+
+		if (isset($response->error) && $response->error == 'unauthorized_client'
+			&& isset($response->error_description) && $response->error_description == 'Provided access token has expired') {
+
+			$tokens = $this->refreshAccessToken($shopUrl);
+
+			if (empty($tokens->access_token)) {
+				echo '/* Info: Please reinstall the Retargeting App as the tokens have expired. */';
+
+				return 'tokens_expired';
+			} else {
+
+				// DB lazy init
+				$this->db = new DBConn($this->config['db']['host'], $this->config['db']['user'], $this->config['db']['pass'], $this->config['db']['db']);
+				
+				$shopId = $this->db->getShopIdByUrl($shopUrl);
+			
+				$this->db->saveTokens($shopId, $tokens);
+
+				// reinit Shop Tokens
+				$this->tokens = $this->db->getShopTokens($shopId);
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 	public function getAccessToken($shopUrl, $data) {
@@ -31,46 +65,105 @@ class HttpAdapter {
 		return $this->sendRequest($url, $fields);
 	}
 
+	public function refreshAccessToken($shopUrl) {
+
+		$url = $shopUrl.'/webapi/rest/oauth/token?grant_type=refresh_token';
+
+		$fields = array(
+			'code' => $this->tokens['refresh_token']
+		);
+
+		return $this->sendRequest($url, $fields);
+	}
+
 	public function getUser($shopUrl, $id) {
 
 		$url = $shopUrl.'/webapi/rest/users/'.$id;
 		
-		return $this->sendBearerRequest($url);
+		$response = $this->sendBearerRequest($url);
+
+		$check = $this->checkIfTokenExpired($shopUrl, $response);
+		if ($check == 'tokens_expired')
+			return false;
+		if ($check)
+			$response = $this->sendBearerRequest($url);
+		
+		return $response;
 	}
 
 	public function getCategory($shopUrl, $id) {
 
 		$url = $shopUrl.'/webapi/rest/categories/'.$id;
 		
-		return $this->sendBearerRequest($url);
+		$response = $this->sendBearerRequest($url);
+
+		$check = $this->checkIfTokenExpired($shopUrl, $response);
+		if ($check == 'tokens_expired')
+			return false;
+		if ($check)
+			$response = $this->sendBearerRequest($url);
+
+		return $response;
 	}
 
 	public function getCategoryTree($shopUrl) {
 
 		$url = $shopUrl.'/webapi/rest/categories-tree';
 		
-		return $this->sendBearerRequest($url);
+		$response = $this->sendBearerRequest($url);
+
+		$check = $this->checkIfTokenExpired($shopUrl, $response);
+		if ($check == 'tokens_expired')
+			return false;
+		if ($check)
+			$response = $this->sendBearerRequest($url);
+		
+		return $response;
 	}
 
 	public function getBrand($shopUrl, $id) {
 
 		$url = $shopUrl.'/webapi/rest/producers/'.$id;
 		
-		return $this->sendBearerRequest($url);
+		$response = $this->sendBearerRequest($url);
+
+		$check = $this->checkIfTokenExpired($shopUrl, $response);
+		if ($check == 'tokens_expired')
+			return false;
+		if ($check)
+			$response = $this->sendBearerRequest($url);
+		
+		return $response;
 	}
 
 	public function getProduct($shopUrl, $id) {
 
 		$url = $shopUrl.'/webapi/rest/products/'.$id;
 		
-		return $this->sendBearerRequest($url);
+		$response = $this->sendBearerRequest($url);
+
+		$check = $this->checkIfTokenExpired($shopUrl, $response);
+		if ($check == 'tokens_expired')
+			return false;
+		if ($check)
+			$response = $this->sendBearerRequest($url);
+		
+		return $response;
 	}
 
 	public function getOrder($shopUrl, $id) {
 
 		$url = $shopUrl.'/webapi/rest/orders/'.$id;
 		
-		return $this->sendBearerRequest($url);
+		$response = $this->sendBearerRequest($url);
+
+		$check = $this->checkIfTokenExpired($shopUrl, $response);
+		if ($check == 'tokens_expired')
+			return false;
+		if ($check)
+			$response = $this->sendBearerRequest($url);
+		
+		return $response;
 	}
 
 	private function sendRequest($url, $data) {
