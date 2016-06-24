@@ -242,7 +242,7 @@ class App {
 
 			$productImage = '';
 			if ($product->main_image !== null)
-				$productImage = '/userdata/gfx/'.$product->main_image->gfx_id.'.jpg';
+				$productImage = $shopData['shop_url'].'/userdata/gfx/'.$product->main_image->unic_name.'.jpg';
 
 			$brand = $this->http->getBrand($shopData['shop_url'], $product->producer_id);
 
