@@ -59,7 +59,7 @@ class App {
 
 			$shopId = $this->db->getShopId($params['shopKey']);
 
-			return json_encode($this->db->updateShopConfig($shopId, (empty($params['changeStatus']) ? false : true ), $params['domainApiKey'], $params['discountsApiKey'], $params['help_pages'], $params['qs_add_to_cart']));
+			return json_encode($this->db->updateShopConfig($shopId, (empty($params['changeStatus']) ? false : true ), $params['domainApiKey'], $params['discountsApiKey'], $params['help_pages'], $params['qs_add_to_cart'], $params['qs_variation'], $params['qs_add_to_wishlist'], $params['qs_product_images'], $params['qs_review'], $params['qs_price'], $params['qs_old_price']));
 		}
 	}
 

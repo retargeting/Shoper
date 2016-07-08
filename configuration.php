@@ -94,9 +94,45 @@ $app = new App(Config());
 				</div>
 
 				<div class="input">
-					<label for="ra_">Add To Cart Button</label>
+					<label for="ra_add_to_cart">Add To Cart Button</label>
 					<input type="text" name="ra_add_to_cart" id="ra_add_to_cart" placeholder='form[action="/cart/add"] [type="submit"]' value="<?php echo $app->querySelectors['addToCart']; ?>">
 					<p class="description">Query selector for the button used to add a product to cart.</p>
+				</div>
+				
+				<div class="input">
+					<label for="ra_variation"></label>
+					<input type="text" name="ra_variation" id="ra_variation" placeholder='' value="<?php echo $app->querySelectors['variation']; ?>">
+					<p class="description">[Experimental] Query selector for the product options used to change the preferences of the product.</p>
+				</div>
+				
+				<div class="input">
+					<label for="ra_add_to_wishlist"></label>
+					<input type="text" name="ra_add_to_wishlist" id="ra_add_to_wishlist" placeholder='' value="<?php echo $app->querySelectors['addToWishlist']; ?>">
+					<p class="description">[Experimental] Query selector for the button used to add a product to wishlist.</p>
+				</div>
+				
+				<div class="input">
+					<label for="ra_product_images"></label>
+					<input type="text" name="ra_product_images" id="ra_product_images" placeholder='' value="<?php echo $app->querySelectors['productImages']; ?>">
+					<p class="description">[Experimental] Query selector for the main product image on a product page.</p>
+				</div>
+				
+				<div class="input">
+					<label for="ra_review"></label>
+					<input type="text" name="ra_review" id="ra_review" placeholder='' value="<?php echo $app->querySelectors['review']; ?>">
+					<p class="description">[Experimental] Query selector for the button used to submit a comment/review for a product.</p>
+				</div>
+				
+				<div class="input">
+					<label for="ra_price"></label>
+					<input type="text" name="ra_price" id="ra_price" placeholder='' value="<?php echo $app->querySelectors['price']; ?>">
+					<p class="description">[Experimental] Query selector for the main product price on a product page.</p>
+				</div>
+				
+				<div class="input">
+					<label for="ra_old_price"></label>
+					<input type="text" name="ra_old_price" id="ra_old_price" placeholder='' value="<?php echo $app->querySelectors['oldPrice']; ?>">
+					<p class="description">[Experimental] Query selector for the main product price without discount on a product page.</p>
 				</div>
 
 			</div>
