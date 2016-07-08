@@ -104,18 +104,18 @@ class App {
 			if (!empty($shopData['domain_api_key'])) {
 				return '
 					(function(){
-					var ra_key = "'.$shopData['domain_api_key'].'";
+					ra_key = "'.$shopData['domain_api_key'].'";
+					ra_params = {
+						add_to_cart_button_id: "'.$shopData['qs_add_to_cart'].'",
+						price_label_id: "'.$shopData['qs_price'].'",
+					};
 					var ra = document.createElement("script"); ra.type ="text/javascript"; ra.async = true; ra.src = ("https:" ==
-					document.location.protocol ? "https://" : "http://") + "retargeting-data.eu/rajs/" + ra_key + ".js";
+					document.location.protocol ? "https://" : "http://") + "tracking.retargeting.biz/v3/rajs/" + ra_key + ".js";
 					var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ra,s);})();
 				';
 			} else {
 				return '
-					(function(){
-					var ra = document.createElement("script"); ra.type ="text/javascript"; ra.async = true; ra.src = ("https:" ==
-					document.location.protocol ? "https://" : "http://") + "retargeting-data.eu/" +
-					document.location.hostname.replace("www.","") + "/ra.js"; var s =
-					document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ra,s);})();
+					console.info("Retargeting Tracker: please set a proper Domain API Key in the App\'s Configuration Area.");	
 				';
 			}
 		}
@@ -136,6 +136,7 @@ class App {
 			$shopData = $this->db->getShopData($this->shopId);
 
 			$user = $this->http->getUser($shopData['shop_url'], $entityId);
+			if (!$user) return '/* Info: could not fetch Data because of invalid tokens. */';
 
 			$name = array();
 			if (!empty($user->firstname)) $name[] = $user->firstname;
@@ -165,6 +166,7 @@ class App {
 			$shopData = $this->db->getShopData($this->shopId);
 
 			$category = $this->http->getCategory($shopData['shop_url'], $entityId);
+			if (!$category) return '/* Info: could not fetch Data because of invalid tokens. */';
 
 			$categoryTree = (object) array(
 				'id' => -1,
@@ -181,7 +183,7 @@ class App {
 					"id": "'.$category->category_id.'",
 					"name" : "'.$category->translations->pl_PL->name.'",
 					"parent": '.$categoryParent.',
-					"category_breadcrumb": []
+					"breadcrumb": []
 				}
 
 				if (_ra.ready !== undefined) {
@@ -206,6 +208,7 @@ class App {
 			$shopData = $this->db->getShopData($this->shopId);
 
 			$brand = $this->http->getBrand($shopData['shop_url'], $entityId);
+			if (!$brand) return '/* Info: could not fetch Data because of invalid tokens. */';
 
 			return 'var _ra = _ra || {};
 				_ra.sendBrandInfo = {
@@ -235,6 +238,11 @@ class App {
 			$shopData = $this->db->getShopData($this->shopId);
 
 			$product = $this->http->getProduct($shopData['shop_url'], $entityId);
+			if (!$product) return '/* Info: could not fetch Data because of invalid tokens. */';
+
+			$productImage = '';
+			if ($product->main_image !== null)
+				$productImage = $shopData['shop_url'].'/userdata/gfx/'.$product->main_image->unic_name.'.jpg';
 
 			$brand = $this->http->getBrand($shopData['shop_url'], $product->producer_id);
 
@@ -247,20 +255,23 @@ class App {
 					"id": "'.$product->product_id.'",
 					"name": "'.$product->translations->pl_PL->name.'",
 					"url": "'.$product->translations->pl_PL->permalink.'",
-					"img": "'.''.'",
-					"price": "'.$product->stock->comp_price.'",
-					"promo": "'.($product->stock->comp_promo_price != $product->stock->comp_price ? $product->stock->comp_promo_price : 0 ).'",
-					"stock": '.($product->stock->stock > 0 ? 1 : 0).',
+					"img": "'.$productImage.'",
+					"price": "'.$product->stock->price.'",
+					"promo": "'.($product->stock->price_special != $product->stock->price ? $product->stock->price_special : 0 ).'",
 					"brand": {
 						"id": "'.$brand->producer_id.'",
 						"name": "'.$brand->name.'"
 					},
-					"category": {
+					"category": [{
 						"id": "'.$category->category_id.'",
 						"name" : "'.$category->translations->pl_PL->name.'",
-						"parent": '.$categoryParent.'
-					},
-					"category_breadcrumb": []
+						"parent": '.$categoryParent.',
+						"breadcrumb": []
+					}],
+					"inventory": {
+						"variations": false,
+						"stock": '.($product->stock->stock > 0 ? 1 : 0).'
+					}
 				};
 				
 				if (_ra.ready !== undefined) {
@@ -272,29 +283,30 @@ class App {
 		return '/*'.json_encode(array("Info" => "Retargeting App is disabled!")).'*/';
 	}
 
-	protected function _mouseOverPrice() {
+	// // ! Notice: Deprecated method
+	// protected function _mouseOverPrice() {
 
-		$shopData = $this->db->getShopConfig($this->shopId);
+	// 	$shopData = $this->db->getShopConfig($this->shopId);
 
-		if (empty($this->params['params']->id)) return '/*'.json_encode(array("Info" => "Invalid params!")).'*/';
+	// 	if (empty($this->params['params']->id)) return '/*'.json_encode(array("Info" => "Invalid params!")).'*/';
 
-		if ($shopData['status']) {
+	// 	if ($shopData['status']) {
 
-			$entityId = $this->params['params']->id;
+	// 		$entityId = $this->params['params']->id;
 
-			$shopData = $this->db->getShopData($this->shopId);
+	// 		$shopData = $this->db->getShopData($this->shopId);
 
-			$product = $this->http->getProduct($shopData['shop_url'], $entityId);
+	// 		$product = $this->http->getProduct($shopData['shop_url'], $entityId);
 
-			return '_ra.mouseOverPrice("'.$product->product_id.'", {
-					"price": "'.$product->stock->comp_price.'",
-					"promo": "'.($product->stock->comp_promo_price != $product->stock->comp_price ? $product->stock->comp_promo_price : 0 ).'",
-				});
-			';
-		}
+	// 		return '_ra.mouseOverPrice("'.$product->product_id.'", {
+	// 				"price": "'.$product->stock->comp_price.'",
+	// 				"promo": "'.($product->stock->comp_promo_price != $product->stock->comp_price ? $product->stock->comp_promo_price : 0 ).'",
+	// 			});
+	// 		';
+	// 	}
 
-		return '/*'.json_encode(array("Info" => "Retargeting App is disabled!")).'*/';
-	}
+	// 	return '/*'.json_encode(array("Info" => "Retargeting App is disabled!")).'*/';
+	// }
 
 	protected function _visitHelpPages() {
 
@@ -305,6 +317,9 @@ class App {
 		if ($shopData['status']) {
 
 			$entityId = $this->params['params']->id;
+
+			if ($shopData['help_pages'] == '')
+				return '/*'.json_encode(array("Info" => "No help pages specified in Retargeting App!")).'*/';
 
 			$pageHandles = explode(',', str_replace(' ', '', $shopData['help_pages']));
 
@@ -340,10 +355,15 @@ class App {
 			$shopData = $this->db->getShopData($this->shopId);
 
 			$order = $this->http->getOrder($shopData['shop_url'], $entityId);
+			if (!$order) return '/* Info: could not fetch Data because of invalid tokens. */';
 
 			$discount = number_format($order->sum * $order->discount_code / 100);
 
-			return $order->sum.' * '.$order->discount_code.' = '.$discount.'
+			// return $order->sum.' * '.$order->discount_code.' = '.$discount.'
+			// 	var _ra_oDiscountCode = "'.$discount.'";
+			// 	_ra_saveOrder("'.$discount.'");
+			// ';
+			return '
 				var _ra_oDiscountCode = "'.$discount.'";
 				_ra_saveOrder("'.$discount.'");
 			';

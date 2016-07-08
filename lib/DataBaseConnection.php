@@ -105,7 +105,7 @@ class DBConn {
 
     public function getShopConfig($shopId) {
     	
-    	$sql = "SELECT status, init, domain_api_key, discounts_api_key, qs_add_to_cart, help_pages FROM configurations WHERE shop_id='".$shopId."' LIMIT 1";
+    	$sql = "SELECT status, init, domain_api_key, discounts_api_key, qs_add_to_cart, qs_variation, qs_add_to_wishlist, qs_product_images, qs_review, qs_price, qs_old_price, help_pages FROM configurations WHERE shop_id='".$shopId."' LIMIT 1";
 		
 		$res = $this->db->query($sql);
 
@@ -145,13 +145,13 @@ class DBConn {
 		}
     }
 
-    public function updateShopConfig($shopId, $status, $domainApiKey, $discountsApiKey, $helpPages, $qsAddToCart) {
+    public function updateShopConfig($shopId, $status, $domainApiKey, $discountsApiKey, $helpPages, $qsAddToCart, $qsVariations, $qsAddToWishlist, $qsProductImages, $qsReview, $qsPrice, $qsOldPrice) {
     	
     	if ($status) {
     		$changeStatusSQL = '';
     	}
     	
-    	$sql = "UPDATE configurations set ".($status ? 'status = NOT status, ' : '')."domain_api_key = '".$domainApiKey."', discounts_api_key = '".$discountsApiKey."', help_pages = '".$helpPages."', qs_add_to_cart = '".$qsAddToCart."' WHERE shop_id = ".(int)$shopId;
+    	$sql = "UPDATE configurations set ".($status ? 'status = NOT status, ' : '')."domain_api_key = '".$domainApiKey."', discounts_api_key = '".$discountsApiKey."', help_pages = '".$helpPages."', qs_add_to_cart = '".$qsAddToCart."', qs_variation = '".$qsVariation."', qs_add_to_wishlist = '".$qsAddToWishlist."', qs_product_images = '".$qsProductImages."', qs_review = '".$qsReview."', qs_price = '".$qsPrice."', qs_old_price = '".$qsOldPrice."' WHERE shop_id = ".(int)$shopId;
     	
 		return $this->db->query($sql);
     }
