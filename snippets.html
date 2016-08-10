@@ -454,9 +454,16 @@ if (_ra_cids !== null) {
 	var _ra = _ra || {};
 
 	if (_ra.ready !== undefined) {
-		_ra.checkoutIds(shoper.getBasketProducts());
+		if(typeof shoper === 'undefined') {
+			setTimeout(function() {
+				_ra.checkoutIds(shoper.getBasketProducts());
+			}, 500);
+		} else {
+			_ra.checkoutIds(shoper.getBasketProducts());
+		}
 	}
 }
+
 </script>
 
 
