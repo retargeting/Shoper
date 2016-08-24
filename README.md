@@ -30,20 +30,20 @@ to be added..
 
 ### Configuration
 The extension’s settings are available via Applications - My Applications - Retargeting Tracker - Configuration.
-* Setup Domain API Key
+* Setup Tracking API Key
  * Go to your Retargeting Account -> https://retargeting.biz/login
- * Get the Domain API Key from Settings Page
+ * Get the Tracking API Key from Settings Page
  * Select & copy Discounts API Key
  * Go to your Shoper Store Admin Panel - Applications - My Applications - Retargeting Tracker - Configuration
- * Paste Domain API Key
+ * Paste Tracking API Key
  * Click Save
 
-* Setup Discount API Key
+* Setup REST API Key
  * Go to your Retargeting Account -> https://retargeting.biz/login
- * Get the Discount API Key from Settings Page
+ * Get the REST API Key from Settings Page
  * Select & copy Discounts API Key
  * Go to your Shoper Store Admin Panel - Applications - My Applications - Retargeting Tracker - Configuration
- * Paste Discount API Key
+ * Paste REST API Key
  * Click Save
 
 * To enable the Retargeting Application just press Enable from under App Status. After that the App Status should be set to Running

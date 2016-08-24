@@ -115,7 +115,7 @@ class App {
 				';
 			} else {
 				return '
-					console.info("Retargeting Tracker: please set a proper Domain API Key in the App\'s Configuration Area.");	
+					console.info("Retargeting Tracker: please set a proper Tracking API Key in the App\'s Configuration Area.");	
 				';
 			}
 		}

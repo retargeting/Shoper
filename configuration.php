@@ -61,15 +61,15 @@ $app = new App(Config());
 			<div class="content span-3">
 
 				<div class="input">
-					<label for="ra_domain_api_key">Domain API Key</label>
+					<label for="ra_domain_api_key">Tracking API Key</label>
 					<input type="text" name="ra_domain_api_key" id="ra_domain_api_key" placeholder="ex: 1238BFDOS0SFODBSFKJSDFU2U32" value="<?php echo $app->domainApiKey; ?>">
-					<p class="description">You can find your Secure Domain API Key in your <a href="http://retargeting.biz">Retargeting</a> account.</p>
+					<p class="description">You can find your Secure Tracking API KEY in your <a href="http://retargeting.biz">Retargeting</a> account.</p>
 				</div>
 
 				<div class="input">
-					<label for="ra_discounts_api_key">Discounts API Key</label>
+					<label for="ra_discounts_api_key">REST API Key</label>
 					<input type="text" name="ra_discounts_api_key" id="ra_discounts_api_key" placeholder="ex: 1238BFDOS0SFODBSFKJSDFU2U32" value="<?php echo $app->discountsApiKey; ?>">
-					<p class="description">You can find your Secure Discounts API Key in your <a href="http://retargeting.biz">Retargeting</a> account.</p>
+					<p class="description">You can find your Secure REST API Key in your <a href="http://retargeting.biz">Retargeting</a> account.</p>
 				</div>
 
 			</div>
