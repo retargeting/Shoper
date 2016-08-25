@@ -145,7 +145,7 @@ $app = new App(Config());
 				<h2>To have access to our awesome features you need a <a href="https://retargeting.biz" target="_blank">Retargeting account</a>.</h2>
 				<div class="row">
 					<div class="btn-init btn-disableInit">I already have an account</div>
-					<a href="https://retargeting.biz/signup">
+					<a href="https://retargeting.biz/en/regiframe">
 						<div class="btn-init btn-cta">Start your 14-day Free Trial</div>
 					</a>
 				</div>
