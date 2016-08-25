@@ -143,3 +143,16 @@ function changeStatus() {
 		}
 	)
 }
+
+$(document).ready(function () {
+    $('.btn-new-account').click(function () {
+        $('.config-content').hide(0);
+        $('.signup-now').html('<iframe class="signupiframe" scrolling="no" src="https://retargeting.biz/en/regiframe"></iframe>');
+    });
+
+    $('.btn-close-signup').click(function(){
+        disableInit();
+        $('.signupiframe').hide(0);
+        $('.config-content').show(0);
+    });
+});

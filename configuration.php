@@ -138,21 +138,33 @@ $app = new App(Config());
 			</div>
 		</section>
 
-		<section class="init <?php if ($app->status) echo 'disabled'; ?>">
-			<article>
-				<!--<img src="imgs/logo-big.jpg">-->
+		<section class="init <?php echo ($app->status) ? 'disabled' : 'enabled'; ?>">
+			<article class="config-content">
 				<h1>Hello!</h1>
 				<h2>To have access to our awesome features you need a <a href="https://retargeting.biz" target="_blank">Retargeting account</a>.</h2>
 				<div class="row">
 					<div class="btn-init btn-disableInit">I already have an account</div>
-					<a href="https://retargeting.biz/en/regiframe">
+					<a href="#" class="btn-new-account">
 						<div class="btn-init btn-cta">Start your 14-day Free Trial</div>
 					</a>
 				</div>
 			</article>
-		
-		</section>
+            <div class="signup-now"></div>
+            <div class="btn-init btn-close-signup">Close</div>
 
+		</section>
+        <script>
+            $('.btn-new-account').click(function () {
+                $('.config-content').hide(0);
+                $('.signup-now').html('<iframe class="signupiframe" scrolling="no" src="https://retargeting.biz/en/regiframe"></iframe>');
+            });
+
+            $('.btn-close-signup').click(function(){
+                disableInit();
+                $('.signupiframe').hide(0);
+                $('.config-content').show(0);
+            });
+        </script>
 	</body>
 </html>
 <?php else : ?>
