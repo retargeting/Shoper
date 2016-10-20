@@ -258,10 +258,7 @@ class App {
 					"img": "'.$productImage.'",
 					"price": "'.$product->stock->price.'",
 					"promo": "'.($product->stock->price_special != $product->stock->price ? $product->stock->price_special : 0 ).'",
-					"brand": {
-						"id": "'.$brand->producer_id.'",
-						"name": "'.$brand->name.'"
-					},
+					"brand": false,
 					"category": [{
 						"id": "'.$category->category_id.'",
 						"name" : "'.$category->translations->pl_PL->name.'",
