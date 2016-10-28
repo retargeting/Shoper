@@ -12,13 +12,18 @@ var ShopAppInstance = new ShopApp(function(app) {
         localStorage.setItem('styles', JSON.stringify(params.styles));
 
         app.show(null ,function () {
-            app.adjustIframeSize();
-
+            app.monitorIframeSize();
 			$('#btn-save').click(saveConfiguration);
 			$('#btn-savePreferences').click(saveConfiguration);
 			$('#btn-changeStatus').click(changeStatus);
 
-			$('.btn-disableInit').click(disableInit);
+			$('.btn-disableInit').click(function(){
+			    disableInit();
+				$('.config-content').show(0);
+                $('#s1').show(0);
+                $('#s2').show(0);
+				$('#s3').show(0);
+			});
         });
     }, function(errmsg, app) {
         alert(errmsg);
@@ -143,3 +148,24 @@ function changeStatus() {
 		}
 	)
 }
+
+$(document).ready(function () {
+    $('.btn-new-account').click(function () {
+        $('.config-content').hide(0);
+        $('.signup-now').prepend('<iframe class="signupiframe" scrolling="no" src="https://retargeting.biz/en/regiframe"></iframe>');
+    });
+
+    $('.btn-close-signup').click(function(){
+        disableInit();
+        $('.signupiframe').hide(0);
+        $('.config-content').show(0);
+        $('#s1').show(0);
+        $('#s2').show(0);
+        $('#s3').show(0);
+    });
+    
+    if(typeof $('#template-registeriframe_success')[0] !== 'undefined') {
+	$('.btn-close-signup').show(0);
+    }
+    
+});

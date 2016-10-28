@@ -41,7 +41,7 @@ $('form[action*="basket/add"] [type="submit"]').click(function() {
 	
 	var _ra_regex = $(_ra_parent).attr('action').match(/basket\/add\/([0-9]+)/);
 	_ra_pid = (_ra_regex !== null ? _ra_regex[1] : null);
-
+	console.log(_ra_ProductId);
 	if (_ra_pid === null) {
 		_ra_pid = $(_ra_parent).find('input[name="stock_id"]'); 
 		if (_ra_pid.length > 0) {
@@ -137,9 +137,14 @@ _ra_queryApi('visitHelpPages', {id: window.location.pathname});
 var _ra_cids = window.location.pathname.match(/[a-zA-Z]{2}\/basket/);
 if (_ra_cids !== null) {
 	var _ra = _ra || {};
-
 	if (_ra.ready !== undefined) {
-		_ra.checkoutIds(shoper.getBasketProducts());
+		if(typeof shoper === 'undefined') {
+			setTimeout(function() {
+				_ra.checkoutIds(shoper.getBasketProducts());
+			}, 500);
+		} else {
+			_ra.checkoutIds(shoper.getBasketProducts());
+		}
 	}
 }
 
@@ -489,7 +494,7 @@ $('form[action*="basket/add"] [type="submit"]').click(function() {
 	
 	var _ra_regex = $(_ra_parent).attr('action').match(/basket\/add\/([0-9]+)/);
 	_ra_pid = (_ra_regex !== null ? _ra_regex[1] : null);
-	
+	console.log(_ra_ProductId);
 	if (_ra_pid === null) {
 		_ra_pid = $(_ra_parent).find('input[name="stock_id"]'); 
 		if (_ra_pid.length > 0) {

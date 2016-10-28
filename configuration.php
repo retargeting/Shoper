@@ -37,8 +37,7 @@ $app = new App(Config());
 	</head>
 
 	<body>
-
-		<section>
+		<section id="s1" class="<?php echo ($app->status) ? 'show' : 'hide'; ?>">
 			<header class="span-1">
 				<h1>App Status</h1>
 				<div id="btn-changeStatus" class="btn btn-save"><?php echo ($app->status ? 'Disable' : 'Enable'); ?></div>
@@ -47,13 +46,13 @@ $app = new App(Config());
 				
 				<div class="input">
 					<label for="ra_status"><?php echo ($app->status ? 'Running' : 'Not running'); ?></label>
-					<p class="description"><?php echo ($app->status ? 'Your <a href="http://retargeting.biz">Retargeting</a> App is <strong>up</strong> and <strong>running</strong>' : 'Currently your <a href="http://retargeting.biz">Retargeting</a> App is <strong>not</strong> tracking any of your users. To activate it please press the <strong>Enable</strong> button from to top right of your screen.'); ?></p>
+					<p class="description"><?php echo ($app->status ? 'Your <a href="https://retargeting.biz" target="_blank">Retargeting</a> App is <strong>up</strong> and <strong>running</strong>' : 'Currently your <a href="https://retargeting.biz" target="_blank">Retargeting</a> App is <strong>not</strong> tracking any of your users. To activate it please press the <strong>Enable</strong> button from to top right of your screen.'); ?></p>
 				</div>
 
 			</div>
 		</section>
 
-		<section>
+		<section id="s2" class="<?php echo ($app->status) ? 'show' : 'hide'; ?>">
 			<header class="span-1">
 				<h1>Secure Keys</h1>
 				<div id="btn-save" class="btn btn-save">Save</div>
@@ -63,19 +62,19 @@ $app = new App(Config());
 				<div class="input">
 					<label for="ra_domain_api_key">Tracking API Key</label>
 					<input type="text" name="ra_domain_api_key" id="ra_domain_api_key" placeholder="ex: 1238BFDOS0SFODBSFKJSDFU2U32" value="<?php echo $app->domainApiKey; ?>">
-					<p class="description">You can find your Secure Tracking API KEY in your <a href="http://retargeting.biz">Retargeting</a> account.</p>
+					<p class="description">You can find your Secure Tracking API KEY in your <a href="https://retargeting.biz" target="_blank">Retargeting</a> account.</p>
 				</div>
 
 				<div class="input">
 					<label for="ra_discounts_api_key">REST API Key</label>
 					<input type="text" name="ra_discounts_api_key" id="ra_discounts_api_key" placeholder="ex: 1238BFDOS0SFODBSFKJSDFU2U32" value="<?php echo $app->discountsApiKey; ?>">
-					<p class="description">You can find your Secure REST API Key in your <a href="http://retargeting.biz">Retargeting</a> account.</p>
+					<p class="description">You can find your Secure REST API Key in your <a href="https://retargeting.biz" target="_blank">Retargeting</a> account.</p>
 				</div>
 
 			</div>
 		</section>
 
-		<section>
+		<section id="s3" class="<?php echo ($app->status) ? 'show' : 'hide'; ?>">
 			<header class="span-1">
 				<h1>Preferences</h1>
 				<div id="btn-savePreferences" class="btn btn-save">Save</div>
@@ -85,12 +84,12 @@ $app = new App(Config());
 				<div class="input">
 					<label for="ra_help_pages">Help Pages</label>
 					<input type="text" name="ra_help_pages" id="ra_help_pages" placeholder="about-us" value="<?php echo $app->helpPages; ?>">
-					<p class="description">Please add the URL handles for the pages on which you want the "visitHelpPage" event to fire. Use a comma as a separator for listing multiple handles. For example: http://yourshop.com/<strong>about-us</strong> is represented by the "about-us" handle.</p>
+					<p class="description">Please add the URL handles for the pages on which you want the "visitHelpPage" event to fire. Use a comma as a separator for listing multiple handles. For example: if the full url is http://yourshop.com/<strong>about-us</strong> you need to write only the "<strong>about-us</strong>" handle.</p>
 				</div>
 
 				<div class="info">
 					<label>JavaScript Query Selectors</label>
-					<p>The <a href="http://retargeting.biz">Retargeting</a> App should work out of the box for most themes. But, as themes implementation can vary, in case there would be any problems with events not working as expected you can modify the following settings to make sure the events are linked to the right theme elements.</p>
+					<p>The <a href="https://retargeting.biz" target="_blank">Retargeting</a> App should work out of the box for most themes. But, as themes implementation can vary, in case there would be any problems with events not working as expected you can modify the following settings to make sure the events are linked to the right theme elements.</p>
 				</div>
 
 				<div class="input">
@@ -138,19 +137,22 @@ $app = new App(Config());
 			</div>
 		</section>
 
-		<section class="init <?php if ($app->status) echo 'disabled'; ?>">
-			<article>
-				<!--<img src="imgs/logo-big.jpg">-->
+		<section class="init <?php echo ($app->status) ? 'disabled' : 'enabled'; ?>">
+			<article class="config-content">
 				<h1>Hello!</h1>
 				<h2>To have access to our awesome features you need a <a href="https://retargeting.biz" target="_blank">Retargeting account</a>.</h2>
 				<div class="row">
 					<div class="btn-init btn-disableInit">I already have an account</div>
-					<a href="https://retargeting.biz/en/regiframe">
+					<a href="#" class="btn-new-account">
 						<div class="btn-init btn-cta">Start your 14-day Free Trial</div>
 					</a>
 				</div>
 			</article>
-		
+            <div class="signup-now">
+            	<a href="#" class="btn-close-signup" style="display:none;">
+                	<div class="btn-init btn-cta">Close</div>
+            	</a>
+            </div>
 		</section>
 
 	</body>
