@@ -181,7 +181,7 @@ class App {
 			return 'var _ra = _ra || {};
 				_ra.sendCategoryInfo = {
 					"id": "'.$category->category_id.'",
-					"name" : "'.$category->translations->pl_PL->name.'",
+					"name" : "'.htmlspecialchars($category->translations->pl_PL->name).'",
 					"parent": '.$categoryParent.',
 					"breadcrumb": []
 				}
@@ -253,9 +253,9 @@ class App {
 				var _ra = _ra || {};
 				_ra.sendProductInfo = {
 					"id": "'.$product->product_id.'",
-					"name": "'.$product->translations->pl_PL->name.'",
+					"name": "'.htmlspecialchars($product->translations->pl_PL->name).'",
 					"url": "'.$product->translations->pl_PL->permalink.'",
-					"img": "' . "//" . $productImage.'",
+					"img": "'.$productImage.'",
 					"price": "'.$product->stock->price.'",
 					"promo": "'.($product->stock->price_special != $product->stock->price ? $product->stock->price_special : 0 ).'",
 					"brand": false,
