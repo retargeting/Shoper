@@ -90,7 +90,11 @@ class App {
 		if ($this->params['method'] == "saveOrder") {
 
 			return $this->_saveOrder();
-		}
+		} else
+		if ($this->params['method'] == "querySelector") {
+			
+			return $this->_querySelector();
+		} else			
 
 		return '/*'.json_encode(array("Error" => "Invalid Method!")).'*/';
 	}
@@ -280,31 +284,6 @@ class App {
 		return '/*'.json_encode(array("Info" => "Retargeting App is disabled!")).'*/';
 	}
 
-	// // ! Notice: Deprecated method
-	// protected function _mouseOverPrice() {
-
-	// 	$shopData = $this->db->getShopConfig($this->shopId);
-
-	// 	if (empty($this->params['params']->id)) return '/*'.json_encode(array("Info" => "Invalid params!")).'*/';
-
-	// 	if ($shopData['status']) {
-
-	// 		$entityId = $this->params['params']->id;
-
-	// 		$shopData = $this->db->getShopData($this->shopId);
-
-	// 		$product = $this->http->getProduct($shopData['shop_url'], $entityId);
-
-	// 		return '_ra.mouseOverPrice("'.$product->product_id.'", {
-	// 				"price": "'.$product->stock->comp_price.'",
-	// 				"promo": "'.($product->stock->comp_promo_price != $product->stock->comp_price ? $product->stock->comp_promo_price : 0 ).'",
-	// 			});
-	// 		';
-	// 	}
-
-	// 	return '/*'.json_encode(array("Info" => "Retargeting App is disabled!")).'*/';
-	// }
-
 	protected function _visitHelpPages() {
 
 		$shopData = $this->db->getShopConfig($this->shopId);
@@ -370,6 +349,65 @@ class App {
 		}
 	}
 
+	protected function _querySelector() {
+		
+		$shopData = $this->db->getShopConfig($this->shopId);
+
+		if (empty($this->params['params']->selector)) return '/*'.json_encode(array("Info" => "Invalid params!")).'*/';
+
+		if ($shopData['status']) {
+			$selector = $this->params['params']->selector;
+
+			if ( $selector == 'addToCart' ) {
+				if ( $shopData['qs_add_to_cart'] == '' ) {
+					return null;
+				} else {
+					return "'".$shopData['qs_add_to_cart']."'";
+				}			
+			} elseif ( $selector == 'setVariation' ) {
+				if ( $shopData['qs_variation'] == '' ) {
+					return null;
+				} else {
+					return "'".$shopData['qs_variation']."'";
+				}
+			} elseif ( $selector == 'qs_add_to_wishlist' ) {
+				if ( $shopData['qs_add_to_wishlist'] == '' ) {
+					return null;
+				} else {
+					return "'".$shopData['qs_add_to_wishlist']."'"; 
+				}
+			} elseif ( $selector == 'clickImage' ) {
+				if ( $shopData['qs_product_images'] ) {
+					return null;
+				} else {
+					return "'".$shopData['qs_product_images']."'";
+				}
+			} elseif ( $selector == 'commentOnProduct' ) {
+				if ( $shopData['qs_review'] ) {
+					return null;
+				} else {
+					return "'".$shopData['qs_review']."'";
+				}
+			} elseif ( $selector == 'promoPrice' ) {
+				if ( $shopData['qs_price'] ) {
+					return null;
+				} else {
+					return "'".$shopData['qs_price']."'";
+				}
+			} elseif ( $selector == 'oldlPrice' ) {
+				if ( $shopData['qs_old_price'] ) {
+					return null;
+				} else {
+					return "'".$shopData['qs_old_price']."'";
+				}
+			} else {
+				return null;
+			}
+		} else {
+
+			return '/*'.json_encode(array("Info" => "Retargeting App is disabled!")).'*/';
+		}
+	}
 	/*
 	protected function searchCategoryTree($node) {
 

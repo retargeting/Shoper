@@ -46,7 +46,7 @@ $app = new App(Config());
 				
 				<div class="input">
 					<label for="ra_status"><?php echo ($app->status ? 'Running' : 'Not running'); ?></label>
-					<p class="description"><?php echo ($app->status ? 'Your <a href="https://retargeting.biz" target="_blank">Retargeting</a> App is <strong>up</strong> and <strong>running</strong>' : 'Currently your <a href="https://retargeting.biz" target="_blank">Retargeting</a> App is <strong>not</strong> tracking any of your users. To activate it please press the <strong>Enable</strong> button from to top right of your screen.'); ?></p>
+					<p class="description"><?php echo ($app->status ? 'Your <a href="https://retargeting.biz" target="_blank" rel="noopener noreferrer">Retargeting</a> App is <strong>up</strong> and <strong>running</strong>' : 'Currently your <a href="https://retargeting.biz" target="_blank" rel="noopener noreferrer">Retargeting</a> App is <strong>not</strong> tracking any of your users. To activate it please press the <strong>Enable</strong> button from to top right of your screen.'); ?></p>
 				</div>
 
 			</div>
@@ -68,7 +68,7 @@ $app = new App(Config());
 				<div class="input">
 					<label for="ra_discounts_api_key">REST API Key</label>
 					<input type="text" name="ra_discounts_api_key" id="ra_discounts_api_key" placeholder="ex: 1238BFDOS0SFODBSFKJSDFU2U32" value="<?php echo $app->discountsApiKey; ?>">
-					<p class="description">You can find your Secure REST API Key in your <a href="https://retargeting.biz" target="_blank">Retargeting</a> account.</p>
+					<p class="description">You can find your Secure REST API Key in your <a href="https://retargeting.biz" target="_blank" rel="noopener noreferrer">Retargeting</a> account.</p>
 				</div>
 
 			</div>
@@ -89,47 +89,47 @@ $app = new App(Config());
 
 				<div class="info">
 					<label>JavaScript Query Selectors</label>
-					<p>The <a href="https://retargeting.biz" target="_blank">Retargeting</a> App should work out of the box for most themes. But, as themes implementation can vary, in case there would be any problems with events not working as expected you can modify the following settings to make sure the events are linked to the right theme elements.</p>
+					<p>The <a href="https://retargeting.biz" target="_blank" rel="noopener noreferrer">Retargeting</a> App should work out of the box for most themes. But, as themes implementation can vary, in case there would be any problems with events not working as expected you can modify the following settings to make sure the events are linked to the right theme elements.</p>
 				</div>
 
 				<div class="input">
-					<label for="ra_add_to_cart">Add To Cart Button</label>
+					<label for="ra_add_to_cart">Add To Cart Button Selector</label>
 					<input type="text" name="ra_add_to_cart" id="ra_add_to_cart" placeholder='form[action="/cart/add"] [type="submit"]' value="<?php echo $app->querySelectors['addToCart']; ?>">
 					<p class="description">Query selector for the button used to add a product to cart.</p>
 				</div>
 				
 				<div class="input">
-					<label for="ra_variation"></label>
+					<label for="ra_variation">Product Variations Selector</label>
 					<input type="text" name="ra_variation" id="ra_variation" placeholder='' value="<?php echo $app->querySelectors['variation']; ?>">
 					<p class="description">[Experimental] Query selector for the product options used to change the preferences of the product.</p>
 				</div>
 				
 				<div class="input">
-					<label for="ra_add_to_wishlist"></label>
+					<label for="ra_add_to_wishlist">Wishlist Button Selector</label>
 					<input type="text" name="ra_add_to_wishlist" id="ra_add_to_wishlist" placeholder='' value="<?php echo $app->querySelectors['addToWishlist']; ?>">
 					<p class="description">[Experimental] Query selector for the button used to add a product to wishlist.</p>
 				</div>
 				
 				<div class="input">
-					<label for="ra_product_images"></label>
+					<label for="ra_product_images">Product Image Selector</label>
 					<input type="text" name="ra_product_images" id="ra_product_images" placeholder='' value="<?php echo $app->querySelectors['productImages']; ?>">
 					<p class="description">[Experimental] Query selector for the main product image on a product page.</p>
 				</div>
 				
 				<div class="input">
-					<label for="ra_review"></label>
+					<label for="ra_review">Product Comment/Review Selector</label>
 					<input type="text" name="ra_review" id="ra_review" placeholder='' value="<?php echo $app->querySelectors['review']; ?>">
 					<p class="description">[Experimental] Query selector for the button used to submit a comment/review for a product.</p>
 				</div>
 				
 				<div class="input">
-					<label for="ra_price"></label>
+					<label for="ra_price">Product Promo Price Selector</label>
 					<input type="text" name="ra_price" id="ra_price" placeholder='' value="<?php echo $app->querySelectors['price']; ?>">
 					<p class="description">[Experimental] Query selector for the main product price on a product page.</p>
 				</div>
 				
 				<div class="input">
-					<label for="ra_old_price"></label>
+					<label for="ra_old_price">Product Price Selector</label>
 					<input type="text" name="ra_old_price" id="ra_old_price" placeholder='' value="<?php echo $app->querySelectors['oldPrice']; ?>">
 					<p class="description">[Experimental] Query selector for the main product price without discount on a product page.</p>
 				</div>
@@ -140,7 +140,7 @@ $app = new App(Config());
 		<section class="init <?php echo ($app->status) ? 'disabled' : 'enabled'; ?>">
 			<article class="config-content">
 				<h1>Hello!</h1>
-				<h2>To have access to our awesome features you need a <a href="https://retargeting.biz" target="_blank">Retargeting account</a>.</h2>
+				<h2>To have access to our awesome features you need a <a href="https://retargeting.biz" target="_blank" rel="noopener noreferrer">Retargeting account</a>.</h2>
 				<div class="row">
 					<div class="btn-init btn-disableInit">I already have an account</div>
 					<a href="#" class="btn-new-account">
