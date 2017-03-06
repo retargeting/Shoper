@@ -15,7 +15,7 @@ require 'config.php';
 require 'lib/Api.php';
 //use Retargeting\Lib\App;
 
-$app = new App( Config() );
+$app = new Api( Config() );
 
 if ($app->validRequest) {
 	

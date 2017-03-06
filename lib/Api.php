@@ -4,189 +4,249 @@
 require 'DataBaseConnection.php';
 require 'HttpAdapter.php';
 
-class App {
-	
-	protected $config = array();
+class Api
+{
 
-	protected $db = false;
+    /**
+     * @var array
+     */
+    protected $config = [];
 
-	protected $shopId = false;
+    /**
+     * @var bool
+     */
+    protected $db = false;
 
-	protected $params =  array();
+    /**
+     * @var bool
+     */
+    protected $shopId = false;
 
-	public $validRequest = false;
+    /**
+     * @var array
+     */
+    protected $params = [];
 
-	public function __construct($config) {
+    /**
+     * @var bool
+     */
+    public $validRequest = false;
 
-		$this->config = $config;
+    /**
+     * @var
+     */
+    protected $http;
 
-		$this->init();
 
-		$this->validRequest = $this->verifySender();
+    /**
+     * App constructor.
+     * @param $config
+     */
+    public function __construct($config)
+    {
+
+        $this->config = $config;
+
+        $this->init();
+
+        $this->validRequest = $this->verifySender();
 
         return true;
     }
 
-	public function verifySender() {
+    /**
+     * @return bool
+     */
+    public function verifySender()
+    {
 
-		if ($this->shopId && !empty($this->params['method'])) {
+        if ($this->shopId && !empty($this->params['method'])) {
 
-			return true;
-		}
+            return true;
+        }
 
-		return false;
+        return false;
     }
 
-	private function init() {
+    /**
+     * @return bool|\DBConn
+     */
+    private function init()
+    {
 
-		// Request Params
-		$this->params = $_GET;
-		$this->params['params'] = json_decode(urldecode($this->params['params']));
+        // Request Params
+        $this->params = $_GET;
+        $this->params['params'] = json_decode(urldecode($this->params['params']));
 
-		// DB
-		$this->db = new DBConn($this->config['db']['host'], $this->config['db']['user'], $this->config['db']['pass'], $this->config['db']['db']);
+        // DB
+        $this->db = new DBConn($this->config['db']['host'], $this->config['db']['user'], $this->config['db']['pass'],
+            $this->config['db']['db']);
 
-		// Shop ID
-		$this->shopId = $this->db->getShopIdByUrl($this->params['shop']);
+        // Shop ID
+        $this->shopId = $this->db->getShopIdByUrl($this->params['shop']);
 
-		// HTTP
-		$tokens = $this->db->getShopTokens($this->shopId);
+        // HTTP
+        $tokens = $this->db->getShopTokens($this->shopId);
 
-		$this->http = new HttpAdapter($this->config, $tokens);
+        $this->http = new HttpAdapter($this->config, $tokens);
 
-		return $this->db;	
-	}
+        return $this->db;
+    }
 
-	public function dispatch() {
+    /**
+     * @return null|string
+     */
+    public function dispatch()
+    {
+        $requestMethod = $this->params['method'];
 
-		if ($this->params['method'] == "embedd") {
+        switch ($requestMethod) {
+            case 'embedd':
+                return $this->_embedd();
+                break;
+            case 'setEmail':
+                return $this->_setEmail();
+                break;
+            case 'sendCategory':
+                return $this->_sendCategory();
+                break;
+            case 'sendBrand':
+                return $this->_sendBrand();
+                break;
+            case 'sendProduct':
+                return $this->_sendProduct();
+                break;
+            case 'visitHelpPages':
+                return $this->_visitHelpPages();
+                break;
+            case 'saveOrder':
+                return $this->_saveOrder();
+                break;
+            case 'querySelector':
+                return $this->_querySelector();
+                break;
+            default:
+                return '/*' . json_encode(array("Error" => "Invalid Method!")) . '*/';
+                break;
+        }
+    }
 
-			return $this->_embedd();
-		} else 
-		if ($this->params['method'] == "setEmail") {
+    /**
+     * @return string
+     */
+    protected function _embedd()
+    {
 
-			return $this->_setEmail();
-		} else
-		if ($this->params['method'] == "sendCategory") {
+        /** @noinspection PhpUndefinedMethodInspection */
+        $shopData = $this->db->getShopConfig($this->shopId);
 
-			return $this->_sendCategory();
-		} else
-		if ($this->params['method'] == "sendBrand") {
+        if ($shopData['status']) {
 
-			return $this->_sendBrand();
-		} else
-		if ($this->params['method'] == "sendProduct") {
-
-			return $this->_sendProduct();
-		} else
-		if ($this->params['method'] == "mouseOverPrice") {
-
-			return $this->_mouseOverPrice();
-		} else
-		if ($this->params['method'] == "visitHelpPages") {
-
-			return $this->_visitHelpPages();
-		} else
-		if ($this->params['method'] == "saveOrder") {
-
-			return $this->_saveOrder();
-		} else
-		if ($this->params['method'] == "querySelector") {
-			
-			return $this->_querySelector();
-		} else			
-
-		return '/*'.json_encode(array("Error" => "Invalid Method!")).'*/';
-	}
-
-	protected function _embedd() {
-
-		$shopData = $this->db->getShopConfig($this->shopId);
-
-		if ($shopData['status']) {
-
-			if (!empty($shopData['domain_api_key'])) {
-				return '
+            if (!empty($shopData['domain_api_key'])) {
+                return '
 					(function(){
-					ra_key = "'.$shopData['domain_api_key'].'";
+					ra_key = "' . $shopData['domain_api_key'] . '";
 					ra_params = {
-						add_to_cart_button_id: "'.$shopData['qs_add_to_cart'].'",
-						price_label_id: "'.$shopData['qs_price'].'",
+						add_to_cart_button_id: "' . $shopData['qs_add_to_cart'] . '",
+						price_label_id: "' . $shopData['qs_price'] . '",
 					};
 					var ra = document.createElement("script"); ra.type ="text/javascript"; ra.async = true; ra.src = ("https:" ==
 					document.location.protocol ? "https://" : "http://") + "tracking.retargeting.biz/v3/rajs/" + ra_key + ".js";
 					var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ra,s);})();
 				';
-			} else {
-				return '
+            } else {
+                return '
 					console.info("Retargeting Tracker: please set a proper Tracking API Key in the App\'s Configuration Area.");	
 				';
-			}
-		}
+            }
+        }
 
-		return '/*'.json_encode(array("Info" => "Retargeting App is disabled!")).'*/';
-	}
+        return '/*' . json_encode(["Info" => "Retargeting App is disabled!"]) . '*/';
+    }
 
-	protected function _setEmail() {
+    /**
+     * @return string
+     */
+    protected function _setEmail()
+    {
 
-		$shopData = $this->db->getShopConfig($this->shopId);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $shopData = $this->db->getShopConfig($this->shopId);
 
-		if (empty($this->params['params']->id)) return '/*'.json_encode(array("Info" => "Invalid params!")).'*/';
+        if (empty($this->params['params']->id)) {
+            return '/*' . json_encode(array("Info" => "Invalid params!")) . '*/';
+        }
 
-		if ($shopData['status']) {
+        if ($shopData['status']) {
 
-			$entityId = $this->params['params']->id;
+            $entityId = $this->params['params']->id;
 
-			$shopData = $this->db->getShopData($this->shopId);
+            /** @noinspection PhpUndefinedMethodInspection */
+            $shopData = $this->db->getShopData($this->shopId);
 
-			$user = $this->http->getUser($shopData['shop_url'], $entityId);
-			if (!$user) return '/* Info: could not fetch Data because of invalid tokens. */';
+            /** @noinspection PhpUndefinedFieldInspection */
+            /** @noinspection PhpUndefinedMethodInspection */
+            $user = $this->http->getUser($shopData['shop_url'], $entityId);
+            if (!$user) {
+                return '/* Info: could not fetch Data because of invalid tokens. */';
+            }
 
-			$name = array();
-			if (!empty($user->firstname)) $name[] = $user->firstname;
-			if (!empty($user->lastname)) $name[] = $user->lastname;
+            $name = [];
+            if (!empty($user->firstname)) {
+                $name[] = $user->firstname;
+            }
+            if (!empty($user->lastname)) {
+                $name[] = $user->lastname;
+            }
 
-			return 'var _ra = _ra || {};
+            return 'var _ra = _ra || {};
 				_ra.setEmailInfo = {
-					"email": "'.$user->email.'",
-					"name": "'.implode(' ', $name).'"
+					"email": "' . $user->email . '",
+					"name": "' . implode(' ', $name) . '"
 				};
 			';
-		}
+        }
 
-		return '/*'.json_encode(array("Info" => "Retargeting App is disabled!")).'*/';
-	}
+        return '/*' . json_encode(array("Info" => "Retargeting App is disabled!")) . '*/';
+    }
 
-	protected function _sendCategory() {
+    /**
+     * @return string
+     */
+    protected function _sendCategory()
+    {
 
-		$shopData = $this->db->getShopConfig($this->shopId);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $shopData = $this->db->getShopConfig($this->shopId);
 
-		if (empty($this->params['params']->id)) return '/*'.json_encode(array("Info" => "Invalid params!")).'*/';
+        if (empty($this->params['params']->id)) {
+            return '/*' . json_encode(array("Info" => "Invalid params!")) . '*/';
+        }
 
-		if ($shopData['status']) {
+        if ($shopData['status']) {
 
-			$entityId = $this->params['params']->id;
+            $entityId = $this->params['params']->id;
 
-			$shopData = $this->db->getShopData($this->shopId);
+            /** @noinspection PhpUndefinedMethodInspection */
+            $shopData = $this->db->getShopData($this->shopId);
 
-			$category = $this->http->getCategory($shopData['shop_url'], $entityId);
-			if (!$category) return '/* Info: could not fetch Data because of invalid tokens. */';
+            /** @noinspection PhpUndefinedFieldInspection */
+            /** @noinspection PhpUndefinedMethodInspection */
+            $category = $this->http->getCategory($shopData['shop_url'], $entityId);
+            if (!$category) {
+                return '/* Info: could not fetch Data because of invalid tokens. */';
+            }
 
-			$categoryTree = (object) array(
-				'id' => -1,
-				'children' => $this->http->getCategoryTree($shopData['shop_url'])
-			);
+            $categoryParent = 'false';
+            if (!$category->root) {
+                // build category breadcrumb
+            }
 
-			$categoryParent = 'false';
-			if (!$category->root) {
-				// build category breadcrumb
-			}
-
-			return 'var _ra = _ra || {};
+            return 'var _ra = _ra || {};
 				_ra.sendCategoryInfo = {
-					"id": "'.$category->category_id.'",
-					"name" : "'.htmlspecialchars($category->translations->pl_PL->name).'",
-					"parent": '.$categoryParent.',
+					"id": "' . $category->category_id . '",
+					"name" : "' . htmlspecialchars($category->translations->pl_PL->name) . '",
+					"parent": ' . $categoryParent . ',
 					"breadcrumb": []
 				}
 
@@ -194,84 +254,109 @@ class App {
 					_ra.sendCategory(_ra.sendCategoryInfo);
 				};
 			';
-		}
+        }
 
-		return '/*'.json_encode(array("Info" => "Retargeting App is disabled!")).'*/';
-	}
+        return '/*' . json_encode(array("Info" => "Retargeting App is disabled!")) . '*/';
+    }
 
-	protected function _sendBrand() {
+    /**
+     * @return string
+     */
+    protected function _sendBrand()
+    {
 
-		$shopData = $this->db->getShopConfig($this->shopId);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $shopData = $this->db->getShopConfig($this->shopId);
 
-		if (empty($this->params['params']->id)) return '/*'.json_encode(array("Info" => "Invalid params!")).'*/';
+        if (empty($this->params['params']->id)) {
+            return '/*' . json_encode(array("Info" => "Invalid params!")) . '*/';
+        }
 
-		if ($shopData['status']) {
+        if ($shopData['status']) {
 
-			$entityId = $this->params['params']->id;
+            $entityId = $this->params['params']->id;
 
-			$shopData = $this->db->getShopData($this->shopId);
+            /** @noinspection PhpUndefinedMethodInspection */
+            $shopData = $this->db->getShopData($this->shopId);
 
-			$brand = $this->http->getBrand($shopData['shop_url'], $entityId);
-			if (!$brand) return '/* Info: could not fetch Data because of invalid tokens. */';
+            /** @noinspection PhpUndefinedFieldInspection */
+            /** @noinspection PhpUndefinedMethodInspection */
+            $brand = $this->http->getBrand($shopData['shop_url'], $entityId);
+            if (!$brand) {
+                return '/* Info: could not fetch Data because of invalid tokens. */';
+            }
 
-			return 'var _ra = _ra || {};
+            return 'var _ra = _ra || {};
 				_ra.sendBrandInfo = {
-					"id": "'.$brand->producer_id.'",
-					"name": "'.$brand->name.'"
+					"id": "' . $brand->producer_id . '",
+					"name": "' . $brand->name . '"
 				};
 
 				if (_ra.ready !== undefined) {
 					_ra.sendBrand(_ra.sendBrandInfo);
 				}
 			';
-		}
+        }
 
-		return '/*'.json_encode(array("Info" => "Retargeting App is disabled!")).'*/';
-	}
+        return '/*' . json_encode(["Info" => "Retargeting App is disabled!"]) . '*/';
+    }
 
-	protected function _sendProduct() {
+    /**
+     * @return string
+     */
+    protected function _sendProduct()
+    {
 
-		$shopData = $this->db->getShopConfig($this->shopId);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $shopData = $this->db->getShopConfig($this->shopId);
 
-		if (empty($this->params['params']->id)) return '/*'.json_encode(array("Info" => "Invalid params!")).'*/';
+        if (empty($this->params['params']->id)) {
+            return '/*' . json_encode(array("Info" => "Invalid params!")) . '*/';
+        }
 
-		if ($shopData['status']) {
+        if ($shopData['status']) {
 
-			$entityId = $this->params['params']->id;
+            $entityId = $this->params['params']->id;
 
-			$shopData = $this->db->getShopData($this->shopId);
+            /** @noinspection PhpUndefinedMethodInspection */
+            $shopData = $this->db->getShopData($this->shopId);
 
-			$product = $this->http->getProduct($shopData['shop_url'], $entityId);
-			if (!$product) return '/* Info: could not fetch Data because of invalid tokens. */';
+            /** @noinspection PhpUndefinedFieldInspection */
+            /** @noinspection PhpUndefinedMethodInspection */
+            $product = $this->http->getProduct($shopData['shop_url'], $entityId);
+            if (!$product) {
+                return '/* Info: could not fetch Data because of invalid tokens. */';
+            }
 
-			$productImage = '';
-			if ($product->main_image !== null)
-				$productImage = $shopData['shop_url'].'/userdata/gfx/'.$product->main_image->unic_name.'.jpg';
+            $productImage = '';
+            if ($product->main_image !== null) {
+                $productImage = $shopData['shop_url'] . '/userdata/gfx/' . $product->main_image->unic_name . '.jpg';
+            }
 
-			$brand = $this->http->getBrand($shopData['shop_url'], $product->producer_id);
+            /** @noinspection PhpUndefinedFieldInspection */
+            /** @noinspection PhpUndefinedMethodInspection */
+            $category = $this->http->getCategory($shopData['shop_url'], $product->category_id);
+            $categoryParent = 'false';
 
-			$category = $this->http->getCategory($shopData['shop_url'], $product->category_id);
-			$categoryParent = 'false';
-
-			return 'var _ra_ProductId = "'.$product->product_id.'";
+            return 'var _ra_ProductId = "' . $product->product_id . '";
 				var _ra = _ra || {};
 				_ra.sendProductInfo = {
-					"id": "'.$product->product_id.'",
-					"name": "'.htmlspecialchars($product->translations->pl_PL->name).'",
-					"url": "'.$product->translations->pl_PL->permalink.'",
-					"img": "'.$productImage.'",
-					"price": "'.$product->stock->price.'",
-					"promo": "'.($product->stock->price_special != $product->stock->price ? $product->stock->price_special : 0 ).'",
+					"id": "' . $product->product_id . '",
+					"name": "' . htmlspecialchars($product->translations->pl_PL->name) . '",
+					"url": "' . $product->translations->pl_PL->permalink . '",
+					"img": "' . $productImage . '",
+					"price": "' . $product->stock->price . '",
+					"promo": "' . ($product->stock->price_special != $product->stock->price ? $product->stock->price_special : 0) . '",
 					"brand": false,
 					"category": [{
-						"id": "'.$category->category_id.'",
-						"name" : "'.$category->translations->pl_PL->name.'",
-						"parent": '.$categoryParent.',
+						"id": "' . $category->category_id . '",
+						"name" : "' . $category->translations->pl_PL->name . '",
+						"parent": ' . $categoryParent . ',
 						"breadcrumb": []
 					}],
 					"inventory": {
 						"variations": false,
-						"stock": '.($product->stock->stock > 0 ? 1 : 0).'
+						"stock": ' . ($product->stock->stock > 0 ? 1 : 0) . '
 					}
 				};
 				
@@ -279,29 +364,37 @@ class App {
 					_ra.sendProduct(_ra.sendProductInfo);
 				}
 			';
-		}
+        }
 
-		return '/*'.json_encode(array("Info" => "Retargeting App is disabled!")).'*/';
-	}
+        return '/*' . json_encode(array("Info" => "Retargeting App is disabled!")) . '*/';
+    }
 
-	protected function _visitHelpPages() {
+    /**
+     * @return string
+     */
+    protected function _visitHelpPages()
+    {
 
-		$shopData = $this->db->getShopConfig($this->shopId);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $shopData = $this->db->getShopConfig($this->shopId);
 
-		if (empty($this->params['params']->id)) return '/*'.json_encode(array("Info" => "Invalid params!")).'*/';
+        if (empty($this->params['params']->id)) {
+            return '/*' . json_encode(array("Info" => "Invalid params!")) . '*/';
+        }
 
-		if ($shopData['status']) {
+        if ($shopData['status']) {
 
-			$entityId = $this->params['params']->id;
+            $entityId = $this->params['params']->id;
 
-			if ($shopData['help_pages'] == '')
-				return '/*'.json_encode(array("Info" => "No help pages specified in Retargeting App!")).'*/';
+            if ($shopData['help_pages'] == '') {
+                return '/*' . json_encode(array("Info" => "No help pages specified in Retargeting App!")) . '*/';
+            }
 
-			$pageHandles = explode(',', str_replace(' ', '', $shopData['help_pages']));
+            $pageHandles = explode(',', str_replace(' ', '', $shopData['help_pages']));
 
-			foreach ($pageHandles as $pageHandle) {
-				if ($entityId == $pageHandle || $entityId == '/'.$pageHandle) {
-					return 'var _ra = _ra || {};
+            foreach ($pageHandles as $pageHandle) {
+                if ($entityId == $pageHandle || $entityId == '/' . $pageHandle) {
+                    return 'var _ra = _ra || {};
 						_ra.visitHelpPageInfo = {
 							"visit" : true
 						}
@@ -310,121 +403,94 @@ class App {
 							_ra.visitHelpPage();
 						}
 					';
-				}
-			}
-		} else {
+                }
+            }
+        }
 
-			return '/*'.json_encode(array("Info" => "Retargeting App is disabled!")).'*/';
-		}
-	}
+        return '/*' . json_encode(["Info" => "Retargeting App is disabled!"]) . '*/';
 
-	protected function _saveOrder() {
+    }
 
-		$shopData = $this->db->getShopConfig($this->shopId);
+    /**
+     * @return string
+     */
+    protected function _saveOrder()
+    {
 
-		if (empty($this->params['params']->id)) return '/*'.json_encode(array("Info" => "Invalid params!")).'*/';
+        /** @noinspection PhpUndefinedMethodInspection */
+        $shopData = $this->db->getShopConfig($this->shopId);
 
-		if ($shopData['status']) {
+        if (empty($this->params['params']->id)) {
+            return '/*' . json_encode(array("Info" => "Invalid params!")) . '*/';
+        }
 
-			$entityId = $this->params['params']->id;
+        if ($shopData['status']) {
 
-			$shopData = $this->db->getShopData($this->shopId);
+            $entityId = $this->params['params']->id;
 
-			$order = $this->http->getOrder($shopData['shop_url'], $entityId);
-			if (!$order) return '/* Info: could not fetch Data because of invalid tokens. */';
+            /** @noinspection PhpUndefinedMethodInspection */
+            $shopData = $this->db->getShopData($this->shopId);
 
-			$discount = number_format($order->sum * $order->discount_code / 100);
+            /** @noinspection PhpUndefinedFieldInspection */
+            /** @noinspection PhpUndefinedMethodInspection */
+            $order = $this->http->getOrder($shopData['shop_url'], $entityId);
+            if (!$order) {
+                return '/* Info: could not fetch Data because of invalid tokens. */';
+            }
 
-			// return $order->sum.' * '.$order->discount_code.' = '.$discount.'
-			// 	var _ra_oDiscountCode = "'.$discount.'";
-			// 	_ra_saveOrder("'.$discount.'");
-			// ';
-			return '
-				var _ra_oDiscountCode = "'.$discount.'";
-				_ra_saveOrder("'.$discount.'");
+            $discount = number_format($order->sum * $order->discount_code / 100);
+
+            return '
+				var _ra_oDiscountCode = "' . $discount . '";
+				_ra_saveOrder("' . $discount . '");
 			';
-		} else {
+        }
+        return '/*' . json_encode(array("Info" => "Retargeting App is disabled!")) . '*/';
+    }
 
-			return '/*'.json_encode(array("Info" => "Retargeting App is disabled!")).'*/';
-		}
-	}
+    /**
+     * @return string
+     */
+    protected function _querySelector()
+    {
+        /** @noinspection PhpUndefinedMethodInspection */
+        $shopData = $this->db->getShopConfig($this->shopId);
 
-	protected function _querySelector() {
-		
-		$shopData = $this->db->getShopConfig($this->shopId);
+        if (empty($this->params['params']->selector)) {
+            return '/*' . json_encode(["Info" => "Invalid params!"]) . '*/';
+        }
 
-		if (empty($this->params['params']->selector)) return '/*'.json_encode(array("Info" => "Invalid params!")).'*/';
+        if ($shopData['status']) {
+            $selector = $this->params['params']->selector;
 
-		if ($shopData['status']) {
-			$selector = $this->params['params']->selector;
-
-			if ( $selector == 'addToCart' ) {
-				if ( $shopData['qs_add_to_cart'] == '' ) {
-					return null;
-				} else {
-					return "'".$shopData['qs_add_to_cart']."'";
-				}			
-			} elseif ( $selector == 'setVariation' ) {
-				if ( $shopData['qs_variation'] == '' ) {
-					return null;
-				} else {
-					return "'".$shopData['qs_variation']."'";
-				}
-			} elseif ( $selector == 'qs_add_to_wishlist' ) {
-				if ( $shopData['qs_add_to_wishlist'] == '' ) {
-					return null;
-				} else {
-					return "'".$shopData['qs_add_to_wishlist']."'"; 
-				}
-			} elseif ( $selector == 'clickImage' ) {
-				if ( $shopData['qs_product_images'] ) {
-					return null;
-				} else {
-					return "'".$shopData['qs_product_images']."'";
-				}
-			} elseif ( $selector == 'commentOnProduct' ) {
-				if ( $shopData['qs_review'] ) {
-					return null;
-				} else {
-					return "'".$shopData['qs_review']."'";
-				}
-			} elseif ( $selector == 'promoPrice' ) {
-				if ( $shopData['qs_price'] ) {
-					return null;
-				} else {
-					return "'".$shopData['qs_price']."'";
-				}
-			} elseif ( $selector == 'oldlPrice' ) {
-				if ( $shopData['qs_old_price'] ) {
-					return null;
-				} else {
-					return "'".$shopData['qs_old_price']."'";
-				}
-			} else {
-				return null;
-			}
-		} else {
-
-			return '/*'.json_encode(array("Info" => "Retargeting App is disabled!")).'*/';
-		}
-	}
-	/*
-	protected function searchCategoryTree($node) {
-
-		$this->categoryPath[] = $node->id;
-		
-		$ret = false;
-
-		foreach ($node->children as $childNode) {
-			
-			if ($childNode->id == $category->category_id) {
-				// return $road;
-			}
-
-			$ret = $this->searchCategoryTree($childNode);
-		}
-
-		return $ret;
-	}
-	*/
+            switch ($selector) {
+                case 'addToCart':
+                    return $shopData['qs_add_to_cart'];
+                    break;
+                case 'setVariation':
+                    return $shopData['qs_variation'];
+                    break;
+                case 'qs_add_to_wishlist':
+                    return $shopData['qs_add_to_wishlist'];
+                    break;
+                case 'clickImage':
+                    return ($shopData['qs_product_images'] == '') ?
+                        'var _raClickImage = undefined;' :
+                        'var _raClickImage = "' . $shopData['qs_product_images'] . '";';
+                    break;
+                case 'commentOnProduct':
+                    return $shopData['qs_review'];
+                    break;
+                case 'promoPrice':
+                    return $shopData['qs_price'];
+                    break;
+                case 'oldPrice':
+                    return $shopData['qs_old_price'];
+                default:
+                    return '/*' . json_encode(["Info" => "Invalid Query Parameters!"]) . '*/';
+                    break;
+            }
+        }
+        return '/*' . json_encode(["Info" => "Invalid Query Parameters!"]) . '*/';
+    }
 }
